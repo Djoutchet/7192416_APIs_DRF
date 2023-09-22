@@ -14,7 +14,12 @@ class CategoryViewset(ReadOnlyModelViewSet):
     def get_queryset(self):
         return Category.objects.filter(active =True)
         
-class ProductVieset(ModelViewSet):
+class ProductVieset(ReadOnlyModelViewSet):
     serializer_class =SerializersProduct
     def get_queryset(self):
-        return Product.objects.all()
+        queryset= Product.objects.filter(active= True)
+        category_id = self.request.GET.get('category_id')
+        if category_id is not None:
+            queryset = queryset.filter(category_id = category_id)
+        return queryset
+ 
