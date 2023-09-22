@@ -1,16 +1,20 @@
 from shop.serializers import SerializerCategory, SerializersProduct
-from rest_framework.views import APIView 
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from shop.models import Category, Product
 from rest_framework.response import Response
 
-class GetAllCategory(APIView):
-    def get(self, request):
-        category = Category.objects.all()
-        serializers = SerializerCategory(category, many= True)
-        return Response(serializers.data)
+"""class CategoryViewset(ReadOnlyModelViewSet):  # proprieté de lecture seul
+    serializer_class = SerializerCategory
+    def get_queryset(self):
+        return Category.objects.all()"""
 
-class GetAllProduct(APIView):
-    def get(self, *args , **kwargs):
-        products = Product.objects.all()
-        serializers = SerializersProduct(products, many = True)
-        return Response(serializers.data)
+#misse en place d'un filtre
+class CategoryViewset(ReadOnlyModelViewSet):  
+    serializer_class = SerializerCategory
+    def get_queryset(self):
+        return Category.objects.filter(active =True)
+        
+class ProductVieset(ModelViewSet):
+    serializer_class =SerializersProduct
+    def get_queryset(self):
+        return Product.objects.all()

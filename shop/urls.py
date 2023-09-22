@@ -1,8 +1,13 @@
 
-from django.urls import path
-from shop import views
+from django.urls import path, include
+from rest_framework import routers
+from shop.views import ProductVieset, CategoryViewset
+
+router = routers.SimpleRouter() 
+router.register('get_all_category', CategoryViewset, basename='Category')
+router.register('get_all_product', ProductVieset, basename= 'Product')
 
 urlpatterns = [
-    path('get_all_category', views.GetAllCategory.as_view()),
-    path('get_all_product', views.GetAllProduct.as_view() )
+    path('api/', include(router.urls))
+    
 ]
