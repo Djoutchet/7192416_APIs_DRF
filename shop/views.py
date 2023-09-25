@@ -3,6 +3,7 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from shop.models import Category, Product
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 
 """class CategoryViewset(ReadOnlyModelViewSet):  # proprieté de lecture seul
     serializer_class = SerializerCategory
@@ -45,3 +46,11 @@ class ProductVieset(ReadOnlyModelViewSet):
 # la mise en place de ces methode permet de redéfinir les methode 
 # qui ne sont pas définir dans les opération du CRUD, comme je viens de la faire
 # #sont implementation est dans le model et la vue particulièrement  
+
+class AdminCategoryViewset(ModelViewSet):
+    serializer_class = SerializersListCategory
+    serializer_detail_class = SerializerCategory
+    permission_classes = [IsAuthenticated] 
+
+    def get_queryset(self):
+        return Category.objects.all()
