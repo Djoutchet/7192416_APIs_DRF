@@ -1,4 +1,5 @@
-from django.db import models
+from django.db import models, transaction
+
 
 
 class Category(models.Model):
@@ -12,7 +13,16 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-
+    #methode pour désactiver une category
+    # ceci permet de ne pas faire les sovegarde 
+    #sur les produit si la sauvegarde sur les category n'a pas fonctionner
+    @transaction.atomic 
+    def disable(self):
+        if self.active is False:
+            return  # pour spécifier qu'il ne se passe rien si la categorie est désactivé
+        self.active=False
+        self.save()
+        self.products.update(active=False)
 
 class Product(models.Model):
 
@@ -43,3 +53,10 @@ class Article(models.Model):
 
     def __str__(self):
         return self.name
+    @transaction.atomic
+    def disable(self):
+        if self.active is False:
+            return
+        self.active = False
+        self.save()
+        self.articles.update(active =False)
